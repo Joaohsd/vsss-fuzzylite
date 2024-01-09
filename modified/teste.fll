@@ -1,0 +1,52 @@
+#File: teste.fll
+Engine: Accelerator
+InputVariable: distancia
+  enabled: true
+  range: 0.000 800.000
+  lock-range: true
+  term: muito_perto Trapezoid 0.000 0.000 120.000 180.000
+  term: perto Triangle 120.000 180.000 240.000
+  term: media Triangle 180.000 240.000 420.000
+  term: longe Trapezoid 240.000 420.000 800.000 800.000
+InputVariable: delta_distancia
+  enabled: true
+  range: -50.000 50.000
+  lock-range: true
+  term: alta_negativa Trapezoid -50.000 -50.000 -50.000 -5.000
+  term: baixa_negativa Triangle -50.000 -5.000 2.500
+  term: baixa_positiva Triangle -2.500 5.000 50.000
+  term: alta_positiva Trapezoid 5.000 50.000 50.000 50.000
+OutputVariable: aceleracao
+  enabled: true
+  range: 0.000 0.700
+  lock-range: false
+  aggregation: Maximum
+  defuzzifier: Centroid 100
+  default: nan
+  lock-previous: false
+  term: muito_baixa Trapezoid 0.000 0.000 0.100 0.200
+  term: baixa Triangle 0.100 0.200 0.300
+  term: media Triangle 0.200 0.300 0.400
+  term: alta Trapezoid 0.300 0.400 0.700 0.700
+RuleBlock: takagi-sugeno
+  enabled: true
+  conjunction: AlgebraicProduct
+  disjunction: AlgebraicSum
+  implication: Minimum
+  activation: General
+  rule: if distancia is longe and delta_distancia is alta_negativa then aceleracao is alta
+  rule: if distancia is longe and delta_distancia is baixa_negativa then aceleracao is alta
+  rule: if distancia is longe and delta_distancia is baixa_positiva then aceleracao is alta
+  rule: if distancia is longe and delta_distancia is alta_positiva then aceleracao is alta
+  rule: if distancia is media and delta_distancia is alta_negativa then aceleracao is baixa
+  rule: if distancia is media and delta_distancia is baixa_negativa then aceleracao is media
+  rule: if distancia is media and delta_distancia is baixa_positiva then aceleracao is media
+  rule: if distancia is media and delta_distancia is alta_positiva then aceleracao is alta
+  rule: if distancia is perto and delta_distancia is alta_negativa then aceleracao is muito_baixa
+  rule: if distancia is perto and delta_distancia is baixa_negativa then aceleracao is baixa
+  rule: if distancia is perto and delta_distancia is baixa_positiva then aceleracao is media
+  rule: if distancia is perto and delta_distancia is alta_positiva then aceleracao is alta
+  rule: if distancia is muito_perto and delta_distancia is alta_negativa then aceleracao is muito_baixa
+  rule: if distancia is muito_perto and delta_distancia is baixa_negativa then aceleracao is muito_baixa
+  rule: if distancia is muito_perto and delta_distancia is baixa_positiva then aceleracao is baixa
+  rule: if distancia is muito_perto and delta_distancia is alta_positiva then aceleracao is media
